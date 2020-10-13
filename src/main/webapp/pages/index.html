@@ -27,7 +27,7 @@
         <div th:if="${session.userAuth}">
             <a th:href="@{/add/post}">Add post</a>
             <div th:each="item:${postsOnTheFirstPage}">
-                <a th:href="@{/posts/post-posts}">
+                <a th:href="@{/posts/viewPost?id=${item.id}}">
                     <div th:text="${item.getTitle()}"></div>
                 </a>
             </div>
