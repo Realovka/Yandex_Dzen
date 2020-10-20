@@ -1,9 +1,8 @@
 package by.realovka.service;
 
-import by.realovka.dao.UserDao.UserDaoImpl;
+import by.realovka.dao.UserDaoImpl;
 import by.realovka.dto.user.UserAuthDTO;
 import by.realovka.dto.user.UserRegDTO;
-import by.realovka.dto.user.UserUpdateDTO;
 import by.realovka.entity.User;
 import by.realovka.service.exception.DuplicateUserException;
 import by.realovka.service.exception.NoSuchUserException;
@@ -21,35 +20,26 @@ public class UserService {
         if (userDao.containsByLogin(userRegDTO.getLoginUserDTO()).isPresent()) {
             throw new DuplicateUserException("Such user is already");
         }
-        userDao.createUser(userRegDTO);
+        User user = new User(userRegDTO.getNameUserDTO(),userRegDTO.getLoginUserDTO(),userRegDTO.getPasswordUserDTO());
+        userDao.createUser(user);
     }
 
-    public boolean authorizeUser(UserAuthDTO user) {
+    public boolean authorizeUser(UserAuthDTO userAuthDTO) {
+        User user = new User (userAuthDTO.getLoginAuthUser(),userAuthDTO.getPasswordAuthUser());
         if (userDao.containsUser(user).isEmpty()) {
             throw new NoSuchUserException("No such user in DB");
         }
         return true;
     }
 
-    public boolean getUserFromDB(UserAuthDTO user) {
-         if(userDao.containsUser(user).isPresent()){
-             return true;
-         }else return false;
+
+    public User getAuthUserIdAndName(UserAuthDTO userAuthDTO) {
+        User user = new User(userAuthDTO.getLoginAuthUser(),userAuthDTO.getPasswordAuthUser());
+        User userAuth = new User();
+        if (userDao.containsUser(user).isPresent()) {
+             userAuth =  userDao.containsUser(user).get();
+        }
+        return userAuth;
     }
 
-    public void updateUserInDB(User oldUser, UserUpdateDTO newUserUpdateDTO) {
-        userDao.updateUser(oldUser, newUserUpdateDTO);
-    }
-
-//    public long getAuthUserId(UserAuthDTO userAuthDTO) {
-//        long id = 0;
-//        if (userDao.getIdUser(userAuthDTO).isPresent()) {
-//            id = userDao.getIdUser(userAuthDTO).get().getId();
-//        }
-//        return id;
-//    }
-
-    public void deleteUserFromDB(User user) {
-        userDao.deleteUser(user);
-    }
 }

@@ -1,116 +1,52 @@
 package by.realovka.entity;
 
 
-import java.sql.Date;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
-    private int id;
+    private long id;
     private String title;
     private String description;
-    private String textNews;
-    private Date createdAt;
-    private User user;
-    private int view;
-    private List<Comment> commentList;
-    private List<Like> likeList;
+    private String text;
+    private Timestamp timestamp;
+    private long view;
+    private long userId;
 
-    public Post(int id, String title, String description, String textNews, Date createdAt, User user, int view, List<Comment> commentList, List<Like> likeList) {
-        this.id = id;
+
+    public Post(String title, String description, String text) {
         this.title = title;
         this.description = description;
-        this.textNews = textNews;
-        this.createdAt = createdAt;
-        this.user = user;
-        this.view = view;
-        this.commentList = commentList;
-        this.likeList = likeList;
+        this.text = text;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    public Post(long id, String title, String text, Timestamp timestamp) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
         this.title = title;
+        this.text = text;
+        this.timestamp = timestamp;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTextNews() {
-        return textNews;
-    }
-
-    public void setTextNews(String textNews) {
-        this.textNews = textNews;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public int getView() {
-        return view;
-    }
-
-    public void setView(int view) {
+    public Post(long id, String title, String text, long view, Timestamp timestamp) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
         this.view = view;
+        this.timestamp = timestamp;
     }
 
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
-
-    public List<Like> getLikeList() {
-        return likeList;
-    }
-
-    public void setLikeList(List<Like> likeList) {
-        this.likeList = likeList;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", textNews='" + textNews + '\'' +
-                ", createdAt=" + createdAt +
-                ", user=" + user +
-                ", view=" + view +
-                ", commentList=" + commentList +
-                ", likeList=" + likeList +
-                '}';
+    public Post(long id, String title, String text, long view, Timestamp timestamp,long userId) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+        this.view = view;
+        this.timestamp = timestamp;
+        this.userId = userId;
     }
 }

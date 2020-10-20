@@ -1,9 +1,16 @@
 package by.realovka.dto.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAuthDTO {
+
     @NotBlank
     @NotEmpty
     private String loginAuthUser;
@@ -11,35 +18,4 @@ public class UserAuthDTO {
     @NotEmpty
     private String passwordAuthUser;
 
-    public UserAuthDTO(String loginAuthUser, String passwordAuthUser) {
-        this.loginAuthUser = loginAuthUser;
-        this.passwordAuthUser = passwordAuthUser;
-    }
-
-    public UserAuthDTO() {
-    }
-
-    public String getLoginAuthUser() {
-        return loginAuthUser;
-    }
-
-    public void setLoginAuthUser(String loginAuthUser) {
-        this.loginAuthUser = loginAuthUser;
-    }
-
-    public String getPasswordAuthUser() {
-        return passwordAuthUser;
-    }
-
-    public void setPasswordAuthUser(String passwordAuthUser) {
-        this.passwordAuthUser = passwordAuthUser;
-    }
-
-    @Override
-    public String toString() {
-        return "UserAuthDTO{" +
-                "loginAuthUser='" + loginAuthUser + '\'' +
-                ", passwordAuthUser='" + passwordAuthUser + '\'' +
-                '}';
-    }
 }

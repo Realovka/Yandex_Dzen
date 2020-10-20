@@ -1,14 +1,13 @@
 package by.realovka.service;
 
-import by.realovka.dao.commentDao.CommentDaoImpl;
-import by.realovka.dao.UserDao.UserDaoImpl;
+import by.realovka.dao.CommentDaoImpl;
+import by.realovka.dao.UserDaoImpl;
 import by.realovka.dto.comment.CommentDTO;
-import by.realovka.dto.user.UserAuthDTO;
-import by.realovka.entity.User;
-import by.realovka.service.exception.NoSuchUserException;
+import by.realovka.entity.Comment;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -20,10 +19,24 @@ public class CommentService {
         this.userDao = userDao;
     }
 
-    public void addComment(CommentDTO commentDTO, HttpSession httpSession) {
-        if (userDao.getIdUser((UserAuthDTO) httpSession.getAttribute("userAuth")).isPresent()) {
-            User userAuth = userDao.getIdUser((UserAuthDTO) httpSession.getAttribute("userAuth")).get();
-            commentDao.createComment(commentDTO, userAuth.getId());
-        } else throw new NoSuchUserException();
+    public void addComment(CommentDTO commentDTO, long postId, long userId) {
+        Comment comment = new Comment(commentDTO.getText(), userId, postId);
+        commentDao.createComment(comment);
+    }
+
+    public List<CommentDTO> getListCommentsToPostOnPage(long postId) {
+        List<Comment> comments = commentDao.getListCommentsFromDB();
+        List<CommentDTO> commentToPostOnPage = new ArrayList<>();
+        String nameUserWHoWriteComment = null;
+        for (Comment item : comments) {
+            if (item.getPostId() == postId) {
+                if (userDao.findById(item.getUserId()).isPresent()) {
+                    nameUserWHoWriteComment = userDao.findById(item.getUserId()).get().getName();
+                }
+             CommentDTO commentDTO = new CommentDTO(item.getText(),item.getDate(),nameUserWHoWriteComment);
+             commentToPostOnPage.add(commentDTO);
+            }
+        }
+        return commentToPostOnPage;
     }
 }

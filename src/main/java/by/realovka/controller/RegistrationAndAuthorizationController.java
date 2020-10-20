@@ -1,22 +1,26 @@
 package by.realovka.controller;
 
-import by.realovka.dto.post.PostUserAddDTO;
-import by.realovka.dto.post.PostViewOnPageDTO;
 import by.realovka.dto.user.UserAuthDTO;
 import by.realovka.dto.user.UserRegDTO;
+import by.realovka.entity.Post;
+import by.realovka.entity.User;
 import by.realovka.service.PostService;
 import by.realovka.service.UserService;
+import by.realovka.service.exception.NoSuchUserException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.List;
 
 @Controller
-@RequestMapping(path = "/home")
+@RequestMapping(path = "/reg-auth")
 public class RegistrationAndAuthorizationController {
 
     private UserService userService;
@@ -30,50 +34,47 @@ public class RegistrationAndAuthorizationController {
 
     @GetMapping(path = "/reg")
     public ModelAndView getReg(ModelAndView modelAndView) {
-        ArrayList<PostViewOnPageDTO> postUserAddDTOList = postService.postViewOnTheFirstPageDTOS();
         modelAndView.addObject("userReg", new UserRegDTO());
-        modelAndView.addObject("userAuth", new UserAuthDTO());
-        modelAndView.addObject("postsOnTheFirstPage", postUserAddDTOList);
-        modelAndView.setViewName("index");
+        modelAndView.setViewName("registration");
         return modelAndView;
     }
 
     @PostMapping(path = "/reg")
-    public ModelAndView postReg(@Valid @ModelAttribute("userReg") UserRegDTO userRegDTO, UserAuthDTO userAuthDTO,
+    public ModelAndView postReg(@Valid @ModelAttribute("userReg") UserRegDTO userRegDTO,
                                 BindingResult bindingResult, ModelAndView modelAndView) {
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("index");
-
+        if(bindingResult.hasErrors()){
+            modelAndView.setViewName("registration");
         } else {
-            if (!userRegDTO.getNameUserDTO().equals("") && !userRegDTO.getNameUserDTO().equals("")
-                    && !userRegDTO.getPasswordUserDTO().equals("")) {
-                userService.createUser(userRegDTO);
-                ArrayList<PostViewOnPageDTO> postUserAddDTOList = postService.postViewOnTheFirstPageDTOS();
-                modelAndView.addObject("userAuth",userAuthDTO);
-                modelAndView.addObject("userReg", new UserRegDTO());
-                modelAndView.addObject("postsOnTheFirstPage", postUserAddDTOList);
-                modelAndView.setViewName("index");
-            }
-
+            userService.createUser(userRegDTO);
+            modelAndView.addObject("userReg", new UserRegDTO());
+            List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+            modelAndView.addObject("postsList", postsOnFirstPage);
+            modelAndView.setViewName("home");
         }
         return modelAndView;
     }
+
+    @GetMapping(path = "/auth")
+    public ModelAndView getAuth(ModelAndView modelAndView) {
+        modelAndView.addObject("userAuth", new UserAuthDTO());
+        modelAndView.setViewName("authorization");
+        return modelAndView;
+    }
+
     @PostMapping(path = "/auth")
-    public ModelAndView postAuth(@Valid @ModelAttribute("userAuth") UserAuthDTO userAuthDTO,UserRegDTO userRegDTO, BindingResult bindingResult, HttpSession httpSession,
+    public ModelAndView postAuth(@Valid @ModelAttribute("userAuth") UserAuthDTO userAuthDTO, BindingResult bindingResult, HttpSession httpSession,
                                  ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("index");
+            modelAndView.setViewName("authorization");
         } else {
-            if (!userAuthDTO.getLoginAuthUser().equals("") && !userAuthDTO.getPasswordAuthUser().equals("")) {
-                if (userService.getUserFromDB(userAuthDTO)) {
-                    httpSession.setAttribute("userAuth", userAuthDTO);
-                    ArrayList<PostViewOnPageDTO> postUserAddDTOList = postService.postViewOnTheFirstPageDTOS();
-                    modelAndView.addObject("userAuth", new UserAuthDTO());
-                    modelAndView.addObject("userReg", userRegDTO);
-                    modelAndView.addObject("postsOnTheFirstPage", postUserAddDTOList);
-                    modelAndView.setViewName("index");
-                }
-            }
+            if (userService.authorizeUser(userAuthDTO)) {
+                User authUser = userService.getAuthUserIdAndName(userAuthDTO);
+                httpSession.setAttribute("userAuth", authUser);
+                modelAndView.addObject("userAuth", new UserAuthDTO());
+                List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+                modelAndView.addObject("postsList", postsOnFirstPage);
+                modelAndView.setViewName("home");
+            } else throw new NoSuchUserException();
         }
         return modelAndView;
     }
