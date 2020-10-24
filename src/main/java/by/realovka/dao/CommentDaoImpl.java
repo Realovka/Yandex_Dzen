@@ -12,25 +12,17 @@ import java.util.List;
 
 @Repository
 public class CommentDaoImpl implements CommentDao {
-//    private ConnectionPool connectionPool;
 
-        private HikariCPDataSource connectionPool;
-//
-//
+    private HikariCPDataSource connectionPool;
+
     public CommentDaoImpl(HikariCPDataSource connectionPool) {
         this.connectionPool = connectionPool;
     }
-//    private Connection connection;
-//
-//    public CommentDaoImpl(Connection connection) {
-//        this.connection = connection;
-//    }
 
     @Override
     public void createComment(Comment comment) {
         try {
             String sql = "INSERT INTO comments VALUES (default, ?,?,?,?)";
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, comment.getText());
@@ -48,11 +40,8 @@ public class CommentDaoImpl implements CommentDao {
         List<Comment> comments = new ArrayList<>();
         try {
             String sql = "SELECT * FROM comments ";
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 String text = resultSet.getString("text");

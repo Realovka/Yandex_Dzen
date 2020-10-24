@@ -13,22 +13,6 @@ import java.util.List;
 
 @Repository
 public class PostDaoImpl implements PostDao {
-//    private ConnectionPool connectionPool;
-//
-//    public PostDaoImpl(ConnectionPool connectionPool) {
-//        this.connectionPool = connectionPool;
-
-//    private Connection connectionPool;
-//
-//    public PostDaoImpl(Connection connectionPool) {
-//        this.connectionPool = connectionPool;
-//    }
-
-//    private Connection connection;
-//
-//    public PostDaoImpl(Connection connection) {
-//        this.connection = connection;
-//    }
 
     private HikariCPDataSource hikariCPDataSource;
 
@@ -40,9 +24,6 @@ public class PostDaoImpl implements PostDao {
     public void createPost(Post post, long id) {
         try {
             String sql = "INSERT INTO posts VALUES (default, ?,?,?,?,default, ?)";
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, post.getTitle());
@@ -62,9 +43,6 @@ public class PostDaoImpl implements PostDao {
         Post postFromDB = new Post();
         try {
             String sql = "SELECT * FROM posts ORDER BY created_at DESC";
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet resultSet = ps.executeQuery();
@@ -87,9 +65,6 @@ public class PostDaoImpl implements PostDao {
         Post postViewOnPage = new Post();
         try {
             String sql = "SELECT * FROM posts WHERE id=?";
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
@@ -108,11 +83,8 @@ public class PostDaoImpl implements PostDao {
         String sql = null;
         try {
                 sql = "UPDATE posts SET views=views+1 WHERE id=?";
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
             ps.setLong(1, id);
             ps.execute();
         } catch (SQLException e) {

@@ -16,28 +16,6 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao{
 
-//    private ConnectionPool connectionPool;
-//
-//    public UserDaoImpl(ConnectionPool connectionPool) {
-//        this.connectionPool = connectionPool;
-//    }
-
-//    private Connection connectionPool;
-//
-//    public UserDaoImpl(Connection connectionPool) {
-//        this.connectionPool = connectionPool;
-//    }
-
-//    private Connection connection;
-//
-//    public UserDaoImpl(Connection connection) {
-//        this.connection = connection;
-//    }
-
-    //    public CommentDaoImpl(Connection connection) {
-//        this.connection = connection;
-//    }
-
     private  HikariCPDataSource hikariCPDataSource;
 
     public UserDaoImpl(HikariCPDataSource hikariCPDataSource) {
@@ -48,9 +26,6 @@ public class UserDaoImpl implements UserDao{
     public void createUser(User user) {
         try {
             String sql = "INSERT INTO users_test VALUES (default , ?,?,?)";
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getName());
@@ -66,9 +41,6 @@ public class UserDaoImpl implements UserDao{
     public Optional<User> containsByLogin(String login) {
         try {
             String sql = "SELECT * FROM users_test WHERE login=?";
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, login);
@@ -86,9 +58,6 @@ public class UserDaoImpl implements UserDao{
     public Optional<User> containsUser(User user) {
         try {
             String sql = "SELECT * FROM users_test WHERE login=? AND password=?";
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getLogin());
@@ -107,9 +76,6 @@ public class UserDaoImpl implements UserDao{
     public Optional<User> findById(long id) {
         try {
             String sql = "SELECT * FROM users_test WHERE id=?";
-//            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-//            PreparedStatement ps = connectionPool.prepareStatement(sql);
-//            Connection connection = HikariCPDataSource.getConnection();
             Connection connection = HikariCPDataSource.getDataSource().getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
