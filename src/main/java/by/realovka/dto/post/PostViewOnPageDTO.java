@@ -18,5 +18,10 @@ public class PostViewOnPageDTO {
     private String userName;
     private long view;
 
-
+    public PostViewOnPageDTO(long id, String title, String text, Timestamp timestamp) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+        this.timestamp = timestamp;
+    }
 }

@@ -5,7 +5,7 @@
     <title>Post</title>
 </head>
 <body>
-<form th:action="@{/posts/viewPost/}" th:object="${postOnPage}" method="post">
+<form th:action="@{/posts/viewPost/{id}(id=${postOnPage.getId()})}" th:object="${postOnPage}" method="post">
     <h3>Post</h3>
     <div th:text="${postOnPage.getTitle()}"></div>
     <div th:text="${postOnPage.getText()}"></div>

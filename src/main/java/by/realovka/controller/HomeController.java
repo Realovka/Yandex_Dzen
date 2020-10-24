@@ -1,6 +1,6 @@
 package by.realovka.controller;
 
-import by.realovka.entity.Post;
+import by.realovka.dto.post.PostViewOnPageDTO;
 import by.realovka.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class HomeController {
 
     @GetMapping(path = "/page")
     public ModelAndView getHomePage(ModelAndView modelAndView){
-        List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+        List<PostViewOnPageDTO> postsOnFirstPage=postService.postViewOnTheFirstPage();
         modelAndView.addObject("postsList", postsOnFirstPage);
         modelAndView.setViewName("home");
         return modelAndView;

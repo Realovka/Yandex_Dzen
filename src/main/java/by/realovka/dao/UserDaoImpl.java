@@ -2,6 +2,7 @@ package by.realovka.dao;
 
 //import by.realovka.ConnectionPool;
 
+import by.realovka.connection.HikariCPDataSource;
 import by.realovka.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -21,18 +22,37 @@ public class UserDaoImpl implements UserDao{
 //        this.connectionPool = connectionPool;
 //    }
 
-    private Connection connectionPool;
+//    private Connection connectionPool;
+//
+//    public UserDaoImpl(Connection connectionPool) {
+//        this.connectionPool = connectionPool;
+//    }
 
-    public UserDaoImpl(Connection connectionPool) {
-        this.connectionPool = connectionPool;
+//    private Connection connection;
+//
+//    public UserDaoImpl(Connection connection) {
+//        this.connection = connection;
+//    }
+
+    //    public CommentDaoImpl(Connection connection) {
+//        this.connection = connection;
+//    }
+
+    private  HikariCPDataSource hikariCPDataSource;
+
+    public UserDaoImpl(HikariCPDataSource hikariCPDataSource) {
+        this.hikariCPDataSource = hikariCPDataSource;
     }
 
     @Override
     public void createUser(User user) {
         try {
             String sql = "INSERT INTO users_test VALUES (default , ?,?,?)";
-            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            PreparedStatement ps = connectionPool.prepareStatement(sql);
 //            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
+//            Connection connection = HikariCPDataSource.getConnection();
+            Connection connection = HikariCPDataSource.getDataSource().getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getName());
             ps.setString(2, user.getLogin());
             ps.setString(3, user.getPassword());
@@ -46,8 +66,11 @@ public class UserDaoImpl implements UserDao{
     public Optional<User> containsByLogin(String login) {
         try {
             String sql = "SELECT * FROM users_test WHERE login=?";
-            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            PreparedStatement ps = connectionPool.prepareStatement(sql);
 //            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
+//            Connection connection = HikariCPDataSource.getConnection();
+            Connection connection = HikariCPDataSource.getDataSource().getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -64,7 +87,10 @@ public class UserDaoImpl implements UserDao{
         try {
             String sql = "SELECT * FROM users_test WHERE login=? AND password=?";
 //            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            Connection connection = HikariCPDataSource.getConnection();
+            Connection connection = HikariCPDataSource.getDataSource().getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getLogin());
             ps.setString(2, user.getPassword());
             ResultSet rs = ps.executeQuery();
@@ -82,7 +108,10 @@ public class UserDaoImpl implements UserDao{
         try {
             String sql = "SELECT * FROM users_test WHERE id=?";
 //            PreparedStatement ps = connectionPool.getConnection().prepareStatement(sql);
-            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            PreparedStatement ps = connectionPool.prepareStatement(sql);
+//            Connection connection = HikariCPDataSource.getConnection();
+            Connection connection = HikariCPDataSource.getDataSource().getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

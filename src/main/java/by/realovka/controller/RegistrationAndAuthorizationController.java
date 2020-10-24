@@ -1,8 +1,8 @@
 package by.realovka.controller;
 
+import by.realovka.dto.post.PostViewOnPageDTO;
 import by.realovka.dto.user.UserAuthDTO;
 import by.realovka.dto.user.UserRegDTO;
-import by.realovka.entity.Post;
 import by.realovka.entity.User;
 import by.realovka.service.PostService;
 import by.realovka.service.UserService;
@@ -47,7 +47,7 @@ public class RegistrationAndAuthorizationController {
         } else {
             userService.createUser(userRegDTO);
             modelAndView.addObject("userReg", new UserRegDTO());
-            List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+            List<PostViewOnPageDTO> postsOnFirstPage=postService.postViewOnTheFirstPage();
             modelAndView.addObject("postsList", postsOnFirstPage);
             modelAndView.setViewName("home");
         }
@@ -71,7 +71,7 @@ public class RegistrationAndAuthorizationController {
                 User authUser = userService.getAuthUserIdAndName(userAuthDTO);
                 httpSession.setAttribute("userAuth", authUser);
                 modelAndView.addObject("userAuth", new UserAuthDTO());
-                List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+                List<PostViewOnPageDTO> postsOnFirstPage=postService.postViewOnTheFirstPage();
                 modelAndView.addObject("postsList", postsOnFirstPage);
                 modelAndView.setViewName("home");
             } else throw new NoSuchUserException();

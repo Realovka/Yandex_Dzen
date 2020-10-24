@@ -1,7 +1,7 @@
 package by.realovka.controller;
 
 import by.realovka.dto.post.PostUserAddDTO;
-import by.realovka.entity.Post;
+import by.realovka.dto.post.PostViewOnPageDTO;
 import by.realovka.entity.User;
 import by.realovka.service.PostService;
 import by.realovka.service.UserService;
@@ -37,7 +37,7 @@ public class PostAddController {
     public ModelAndView postPostToPage(@ModelAttribute("postOnThePage") PostUserAddDTO postUserAddDTO, HttpSession httpSession, ModelAndView modelAndView) {
         User userAuth = (User) httpSession.getAttribute("userAuth");
         postService.addPost(postUserAddDTO, userAuth.getId());
-        List<Post> postsList = postService.postViewOnTheFirstPage();
+        List<PostViewOnPageDTO> postsList = postService.postViewOnTheFirstPage();
         modelAndView.addObject("postsList", postsList);
         modelAndView.setViewName("home");
         return modelAndView;

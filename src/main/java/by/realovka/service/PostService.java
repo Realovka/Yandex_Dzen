@@ -8,7 +8,6 @@ import by.realovka.entity.Post;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,14 +21,17 @@ public class PostService {
     }
 
     public void addPost(PostUserAddDTO postUserAddDTO, long idUser){
-       Post post = new Post(postUserAddDTO.getTitle(),postUserAddDTO.getDescription(),postUserAddDTO.getText());
+       Post post = new Post(postUserAddDTO.getTitle(),postUserAddDTO.getDescription(),postUserAddDTO.getText(), new java.sql.Timestamp(System.currentTimeMillis()));
        postDao.createPost(post, idUser);
     }
 
-    public List<Post> postViewOnTheFirstPage(){
-        ArrayList<Post> list = postDao.getListPostsToFirstPage();
-        Collections.sort(list, new SortPostsOnTheFirstPageComparator());
-        return list;
+    public List<PostViewOnPageDTO> postViewOnTheFirstPage(){
+        List<Post> posts = postDao.getListPostsToFirstPage();
+        List<PostViewOnPageDTO> postViewOnPageDTOS = new ArrayList<>();
+        for(Post item : posts){
+            postViewOnPageDTOS.add(new PostViewOnPageDTO(item.getId(),item.getTitle(),item.getText(),item.getTimestamp()));
+        }
+        return postViewOnPageDTOS;
     }
 
     public PostViewOnPageDTO getPostViewOnPage(long idPost){
@@ -41,13 +43,11 @@ public class PostService {
         return new PostViewOnPageDTO(postFromDB.getId(),postFromDB.getTitle(),postFromDB.getText(),postFromDB.getTimestamp(), userNameWhoWritePost, postFromDB.getView());
     }
 
-    public void insertView(int id) {
-        if (postDao.getPostToPage(id).getView() == 0) {
-            postDao.insertViewPost(id, false);
-        } else {
-            postDao.insertViewPost(id, true);
+    public void insertView(long id) {
+            postDao.insertViewPost(id);
+
         }
     }
 
 
-}
+

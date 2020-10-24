@@ -1,6 +1,6 @@
 package by.realovka.controller;
 
-import by.realovka.entity.Post;
+import by.realovka.dto.post.PostViewOnPageDTO;
 import by.realovka.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class LogoutController {
     public ModelAndView getLogout(ModelAndView modelAndView, HttpSession httpSession){
         httpSession.invalidate();
         modelAndView.setViewName("home");
-        List<Post> postsOnFirstPage=postService.postViewOnTheFirstPage();
+        List<PostViewOnPageDTO> postsOnFirstPage=postService.postViewOnTheFirstPage();
         modelAndView.addObject("postsList", postsOnFirstPage);
         return modelAndView;
     }

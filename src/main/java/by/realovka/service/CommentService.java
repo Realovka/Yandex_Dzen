@@ -6,6 +6,8 @@ import by.realovka.dto.comment.CommentDTO;
 import by.realovka.entity.Comment;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class CommentService {
     }
 
     public void addComment(CommentDTO commentDTO, long postId, long userId) {
-        Comment comment = new Comment(commentDTO.getText(), userId, postId);
+        Comment comment = new Comment(commentDTO.getText(), userId, postId, Date.valueOf(LocalDate.now()));
         commentDao.createComment(comment);
     }
 

@@ -32,7 +32,6 @@ public class UserService {
         return true;
     }
 
-
     public User getAuthUserIdAndName(UserAuthDTO userAuthDTO) {
         User user = new User(userAuthDTO.getLoginAuthUser(),userAuthDTO.getPasswordAuthUser());
         User userAuth = new User();

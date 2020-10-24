@@ -38,20 +38,18 @@ public class PostOnThePageForUserController {
         modelAndView.addObject("comment", new CommentDTO());
         modelAndView.addObject("listComments", comments);
         modelAndView.addObject("likes", likeNumber);
-        httpSession.setAttribute("postId", id);//TODO
         modelAndView.setViewName("post");
         return modelAndView;
     }
 
-    @PostMapping(path = "/viewPost/")
-    public ModelAndView postPostsPage(@ModelAttribute("comment") CommentDTO commentDTO, HttpSession httpSession, ModelAndView modelAndView) {
+    @PostMapping(path = "/viewPost/{id}")
+    public ModelAndView postPostsPage(@ModelAttribute("comment") CommentDTO commentDTO,@PathVariable int id, HttpSession httpSession, ModelAndView modelAndView) {
         User userAuth = (User) httpSession.getAttribute("userAuth");
-        long postId = (Integer) httpSession.getAttribute("postId");
-        long likeNumber = likeService.getLikeNumber(postId);
-        commentService.addComment(commentDTO, postId, userAuth.getId());
-        List<CommentDTO> comments = commentService.getListCommentsToPostOnPage(postId);
-        modelAndView.addObject("postOnPage", postService.getPostViewOnPage(postId));
-        modelAndView.addObject("listComments", commentService.getListCommentsToPostOnPage(postId));
+        long likeNumber = likeService.getLikeNumber(id);
+        commentService.addComment(commentDTO, id, userAuth.getId());
+        List<CommentDTO> comments = commentService.getListCommentsToPostOnPage(id);
+        modelAndView.addObject("postOnPage", postService.getPostViewOnPage(id));
+        modelAndView.addObject("listComments", commentService.getListCommentsToPostOnPage(id));
         modelAndView.addObject("comment", new CommentDTO());
         modelAndView.addObject("likes", likeNumber);
         modelAndView.setViewName("post");

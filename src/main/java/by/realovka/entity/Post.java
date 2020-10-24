@@ -20,10 +20,11 @@ public class Post {
     private long userId;
 
 
-    public Post(String title, String description, String text) {
+    public Post(String title, String description, String text, Timestamp timestamp) {
         this.title = title;
         this.description = description;
         this.text = text;
+        this.timestamp = timestamp;
     }
 
     public Post(long id, String title, String text, Timestamp timestamp) {
